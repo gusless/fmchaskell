@@ -60,27 +60,33 @@ odd (S (S x)) = odd x
 -- It behaves like subtraction, except that it returns 0
 -- when "normal" subtraction would return a negative number.
 monus :: Nat -> Nat -> Nat
-monus = undefined
+monus = (-*)
 
 (-*) :: Nat -> Nat -> Nat
-(-*) = monus
+O -* x = O
+x -* O = x
+(S x) -* (S y) = x -* y
 
 -- multiplication
 (*) :: Nat -> Nat -> Nat
-(*) = undefined
+x * O = O
+x * (S y) = x * y + x
 
 infixl 7 *
 
 -- exponentiation
 (^) :: Nat -> Nat -> Nat
-(^) = undefined
+x ^ O = one
+x ^ (S y) = x * (x ^ y)
 
 -- decide: infix? ? ^
 infixr 8 ^
 
 -- quotient
 (/) :: Nat -> Nat -> Nat
-(/) = undefined
+x / O = undefined
+O / x = O
+-- falta
 
 infixl 7 /
 
