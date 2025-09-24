@@ -12,7 +12,7 @@ data Nat = O | S Nat
   deriving (Eq, Show)
 
 -- some sugar
-zero, one, two, three, four, five, six, seven, eight, nine :: Nat
+zero, one, two, three, four, five, six, seven, eight, nine, false, true :: Nat
 zero  = O
 one   = S zero
 two   = S one
@@ -23,6 +23,9 @@ six   = S five
 seven = S six
 eight = S seven
 nine = S eight -- adicionei o 9, pois estava feio
+
+false = zero
+true = one
 
 -- addition
 (+) :: Nat -> Nat -> Nat
@@ -35,8 +38,8 @@ infixl 6 +
 
 -- Output: O means False, S O means True
 isZero :: Nat -> Nat
-isZero O = S O
-isZero (S _) = O
+isZero O = true
+isZero (S _) = false
 
 -- pred is the predecessor but we define zero's to be zero
 pred :: Nat -> Nat
@@ -45,14 +48,13 @@ pred (S x) = x
 
 -- Output: O means False, S O means True
 even :: Nat -> Nat
-even O = S O
-even (S O) = O
+even O = true
+even (S O) = false
 even (S (S x)) = even x
 
-
 odd :: Nat -> Nat
-odd O = O
-odd (S O) = S O
+odd O = false
+odd (S O) = true
 odd (S (S x)) = odd x
 
 -- This is called the dotminus or monus operator
@@ -63,9 +65,11 @@ monus :: Nat -> Nat -> Nat
 monus = (-*)
 
 (-*) :: Nat -> Nat -> Nat
-O -* x = O
+O -* _ = O
 x -* O = x
 (S x) -* (S y) = x -* y
+
+infixl 6 -*
 
 -- multiplication
 (*) :: Nat -> Nat -> Nat
@@ -76,17 +80,26 @@ infixl 7 *
 
 -- exponentiation
 (^) :: Nat -> Nat -> Nat
-x ^ O = one
+_ ^ O = one
 x ^ (S y) = x * (x ^ y)
 
 -- decide: infix? ? ^
 infixr 8 ^
 
+(>=) :: Nat -> Nat -> Nat
+O >= O = true
+O >= (S _) = false
+(S _) >= O = true
+(S n) >= (S m) = n >= m
+
 -- quotient
 (/) :: Nat -> Nat -> Nat
-x / O = undefined
-O / x = O
--- falta
+_ / O = undefined
+O / _ = O
+x / y =
+  if x >= y == true
+    then S ((x -* y) / y)
+    else O 
 
 infixl 7 /
 
