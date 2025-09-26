@@ -135,13 +135,23 @@ x `absDiff` y =
 (|-|) = absDiff
 
 factorial :: Nat -> Nat
-factorial = undefined
+factorial O = one
+factorial (S x) = S x * factorial x
+
+f :: Nat -> Nat
+f = factorial
 
 -- signum of a number (-1, 0, or 1)
 sg :: Nat -> Nat
-sg = undefined
+sg O = O
+sg _ = one
+--sg -x = undefined
 
 -- lo b a is the floor of the logarithm base b of a
-lo :: Nat -> Nat -> Nat
-lo = undefined
-
+log :: Nat -> Nat -> Nat
+log O _ = undefined
+log _ O = undefined
+log y x =
+  if x >= y == true
+    then S (log y (x / y))
+    else O
