@@ -73,7 +73,7 @@ infixl 6 -*
 
 -- multiplication
 (*) :: Nat -> Nat -> Nat
-x * O = O
+O * _ = O
 x * (S y) = x * y + x
 
 infixl 7 *
@@ -105,7 +105,8 @@ infixl 7 /
 
 -- remainder
 (%) :: Nat -> Nat -> Nat
-(%) = undefined
+_ % O = undefined
+x % y = x -* (y * (x / y))
 
 infixl 7 %
 
