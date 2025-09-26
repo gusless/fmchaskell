@@ -74,6 +74,7 @@ infixl 6 -*
 -- multiplication
 (*) :: Nat -> Nat -> Nat
 O * _ = O
+_ * O = O
 x * (S y) = x * y + x
 
 infixl 7 *
@@ -99,7 +100,7 @@ O / _ = O
 x / y =
   if x >= y == true
     then S ((x -* y) / y)
-    else O 
+    else O
 
 infixl 7 /
 
@@ -115,12 +116,20 @@ infixl 7 %
 -- and then define `devides` as a synonym to it
 -- again, outputs: O means False, S O means True
 (|||) :: Nat -> Nat -> Nat
-(|||) = undefined
+O ||| _ = true
+_ ||| O = false
+x ||| y = 
+  case x % y of
+    O -> true
+    _ -> false
 
 -- x `absDiff` y = |x - y|
 -- (Careful here: this - is the actual minus operator we know from the integers!)
 absDiff :: Nat -> Nat -> Nat
-absDiff = undefined
+x `absDiff` y = 
+  if x >= y == true
+    then x -* y
+    else y -* x
 
 (|-|) :: Nat -> Nat -> Nat
 (|-|) = absDiff
