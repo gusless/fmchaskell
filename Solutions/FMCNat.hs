@@ -102,17 +102,23 @@ instance Ord Nat where
 ----------------------------------------------------------------
 
 isZero :: Nat -> Bool
-isZero = undefined
+isZero O = True
+isZero (S _) = False
 
 -- pred is the predecessor but we define zero's to be zero
 pred :: Nat -> Nat
-pred = undefined
+pred O = O
+pred (S x) = x
 
 even :: Nat -> Bool
-even = undefined
+even O = True
+even (S O) = False
+even (S (S x)) = even x
 
 odd :: Nat -> Bool
-odd = undefined
+odd O = False
+odd (S O) = True
+odd (S (S x)) = odd x
 
 
 ----------------------------------------------------------------
@@ -121,72 +127,120 @@ odd = undefined
 
 -- addition
 (<+>) :: Nat -> Nat -> Nat
-(<+>) = undefined
+n <+> O   = n
+n <+> S m = S (n <+> m)
+
+infixl 6 <+>
 
 -- This is called the dotminus or monus operator
 -- (also: proper subtraction, arithmetic subtraction, ...).
 -- It behaves like subtraction, except that it returns 0
 -- when "normal" subtraction would return a negative number.
 monus :: Nat -> Nat -> Nat
-monus = undefined
+monus = (-*)
 
 (-*) :: Nat -> Nat -> Nat
-(-*) = undefined
+O -* _ = O
+x -* O = x
+(S x) -* (S y) = x -* y
+
+infixl 6 -*
 
 -- multiplication
 times :: Nat -> Nat -> Nat
-times = undefined
+times = (<*>)
 
 (<*>) :: Nat -> Nat -> Nat
-(<*>) = times
+O <*> _ = O
+_ <*> O = O
+x <*> (S y) = x <*> y + x
+
+infixl 7 <*>
 
 -- power / exponentiation
 pow :: Nat -> Nat -> Nat
-pow = undefined
+pow = exp
 
 exp :: Nat -> Nat -> Nat
-exp = undefined
+exp = (<^>)
 
 (<^>) :: Nat -> Nat -> Nat
-(<^>) = undefined
+_ <^> O = one
+x <^> (S y) = x <^> y * x
+
+infixr 8 <^>
 
 -- quotient
+
 (</>) :: Nat -> Nat -> Nat
-(</>) = undefined
+(</>) = (//)
+
+(//) :: Nat -> Nat -> Nat
+_ // O = undefined
+O // _ = O
+x // y =
+  if x >= y
+    then S ((x -* y) // y)
+    else O
+
+infixl 7 //
 
 -- remainder
 (<%>) :: Nat -> Nat -> Nat
-(<%>) = undefined
+x <%> y = x -* (y <*> (x // y ))
+
+infixl 7 <%>
 
 -- euclidean division
 eucdiv :: (Nat, Nat) -> (Nat, Nat)
-eucdiv = undefined
+eucdiv (x, y) = (x // y, x <%> y)
 
 -- divides
 (<|>) :: Nat -> Nat -> Bool
-(<|>) = undefined
+O <|> _ = True
+_ <|> O = False
+x <|> y = 
+  case x <%> y of
+    O -> True
+    _ -> False
 
+divides :: Nat -> Nat -> Bool
 divides = (<|>)
-
 
 -- distance between nats
 -- x `dist` y = |x - y|
 -- (Careful here: this - is the real minus operator!)
 dist :: Nat -> Nat -> Nat
-dist = undefined
+dist = (|-|)
 
-(|-|) = dist
+(|-|) :: Nat -> Nat -> Nat
+x |-| y = 
+  if x >= y
+    then x -* y
+    else y -* x
+
 
 factorial :: Nat -> Nat
-factorial = undefined
+factorial = fat
+
+fat :: Nat -> Nat
+fat O = one
+fat (S x) = S x * fat x
 
 -- signum of a number (-1, 0, or 1)
 sg :: Nat -> Nat
-sg = undefined
+sg O = O
+sg _ = one
+--sg -x = undefined
 
 -- lo b a is the floor of the logarithm base b of a
-lo :: Nat -> Nat -> Nat
-lo = undefined
+log :: Nat -> Nat -> Nat
+log O _ = undefined
+log _ O = undefined
+log y x =
+  if x >= y
+    then S (log y (x // y))
+    else O
 
 
 ----------------------------------------------------------------
@@ -212,9 +266,15 @@ instance Num Nat where
     (*) :: Nat -> Nat -> Nat
     (*) = (<*>)
 
-    --(-) = (<->)
+    (-) :: Nat -> Nat -> Nat
+    (-) = (-*)
+    
+    abs :: Nat -> Nat
     abs n = n
+    
+    signum :: Nat -> Nat
     signum = sg
+
     fromInteger x
       | x < 0     = undefined
       | x == 0    = undefined
