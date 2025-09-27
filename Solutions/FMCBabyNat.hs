@@ -22,7 +22,7 @@ five  = S four
 six   = S five
 seven = S six
 eight = S seven
-nine = S eight -- adicionei o 9, pois estava feio
+nine  = S eight -- adicionei o 9, pois estava feio
 
 false = zero
 true = one
