@@ -251,10 +251,14 @@ log y x =
 -- Do NOT use the following functions in the definitions above!
 
 toNat :: Integral a => a -> Nat
-toNat = undefined
+toNat 0 = O
+toNat x
+  | x > 0 = S (toNat (x - 1))
+  | otherwise = error "toNaT: número negativo"
 
 fromNat :: Integral a => Nat -> a
-fromNat = undefined
+fromNat O = 0
+fromNat (S x) = 1 + fromNat x
 
 
 -- Voilá: we can now easily make Nat an instance of Num.
@@ -276,7 +280,7 @@ instance Num Nat where
     signum = sg
 
     fromInteger x
-      | x < 0     = undefined
-      | x == 0    = undefined
-      | otherwise = undefined
+      | x < 0     = error "Número negativo"
+      | x == 0    = O
+      | otherwise = S (fromInteger (x - 1))
 
