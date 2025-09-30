@@ -234,6 +234,9 @@ sg _ = one
 --sg -x = undefined
 
 -- lo b a is the floor of the logarithm base b of a
+lo :: Nat -> Nat -> Nat
+lo = log
+
 log :: Nat -> Nat -> Nat
 log O _ = undefined
 log _ O = undefined

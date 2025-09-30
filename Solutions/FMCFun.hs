@@ -9,6 +9,21 @@ import Prelude hiding
     )
 
 -- use your mind to infer the types, don't cheat!
+data Nat where
+    O :: Nat
+    S :: Nat -> Nat
+
+zero, one, two, three, four, five, six, seven, eight, nine, false, true :: Nat
+zero  = O
+one   = S zero
+two   = S one
+three = S two
+four  = S three
+five  = S four
+six   = S five
+seven = S six
+eight = S seven
+nine  = S eight
 
 -- curry takes a "traditional" binary function
 -- and returns its currified version
