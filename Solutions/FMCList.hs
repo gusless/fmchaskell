@@ -62,7 +62,7 @@ write [u,v]     for our u `Cons` (v `Cons` Nil)
 
 head :: [a] -> a
 head [] = error "empty list"
-head (x : xs) = x 
+head (x : xs) = x
 
 tail :: [a] -> [a]
 tail [] = error "empty list"
@@ -99,7 +99,8 @@ infixr 5 ++
 
 -- (snoc is cons written backwards)
 snoc :: a -> [a] -> [a]
-snoc = undefined
+snoc x [] = [x]
+snoc x (y : ys) = x : snoc y ys
 
 (<:) :: [a] -> a -> [a]
 (<:) = flip snoc
@@ -175,8 +176,12 @@ infixl 5 +++
 -- transpose
 
 -- checks if the letters of a phrase form a palindrome (see below for examples)
+
+normalize :: String -> String
+normalize s = [C.toLower c | c <- s, C.isAlphaNum c]
+
 palindrome :: String -> Bool
-palindrome = undefined
+palindrome s = normalize s == reverse (normalize s)
 
 {-
 
