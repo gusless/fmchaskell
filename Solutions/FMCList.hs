@@ -1,4 +1,6 @@
 {-# LANGUAGE GADTs #-}
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+{-# HLINT ignore "Use foldr" #-}
 
 module FMCList where
 
@@ -13,6 +15,7 @@ import Prelude
 import qualified Prelude   as P
 import qualified Data.List as L
 import qualified Data.Char as C
+import GHC.Base (TrName(TrNameD))
 
 {- import qualified ... as ... ?
 
@@ -58,22 +61,29 @@ write [u,v]     for our u `Cons` (v `Cons` Nil)
 -}
 
 head :: [a] -> a
-head = undefined
+head [] = error "Lista vazia"
+head (x : xs) = x 
 
 tail :: [a] -> [a]
-tail = undefined
+tail [] = error "Lista vazia"
+tail (x : xs) = xs
 
 null :: [a] -> Bool
-null = undefined
+null [] = True
+null (_:_) = False
 
 length :: Integral i => [a] -> i
-length = undefined
+length [] = 0
+length (_ : xs) = 1 + length xs
 
 sum :: Num a => [a] -> a
-sum = undefined
+sum [] = 0
+sum (x : xs) = x + sum xs
 
 product :: Num a => [a] -> a
-product = undefined
+product [] = 0
+product [x] = x
+product (x : xs) =  x * product xs
 
 reverse :: [a] -> [a]
 reverse = undefined
