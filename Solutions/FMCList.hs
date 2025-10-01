@@ -61,11 +61,11 @@ write [u,v]     for our u `Cons` (v `Cons` Nil)
 -}
 
 head :: [a] -> a
-head [] = error "Lista vazia"
+head [] = error "empty list"
 head (x : xs) = x 
 
 tail :: [a] -> [a]
-tail [] = error "Lista vazia"
+tail [] = error "empty list"
 tail (x : xs) = xs
 
 null :: [a] -> Bool
@@ -85,11 +85,13 @@ product [] = 0
 product [x] = x
 product (x : xs) =  x * product xs
 
-reverse :: [a] -> [a]
-reverse = undefined
-
 (++) :: [a] -> [a] -> [a]
-(++) = undefined
+[] ++ xs = xs
+(x : xs) ++ ys = x : (xs ++ ys)
+
+reverse :: [a] -> [a]
+reverse [] = []
+reverse (x : xs) = reverse xs ++ [x]
 
 -- right-associative for performance!
 -- (what?!)
