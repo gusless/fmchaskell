@@ -136,14 +136,42 @@ drop 0 xs = xs
 drop _ [] = []
 drop n (_ : xs) = drop (n-1) xs
 
--- takeWhile
--- dropWhile
+takeWhile :: (a -> Bool) -> [a] -> [a]
+takeWhile _ [] = []
+takeWhile p (x : xs)
+  | p x = x : takeWhile p xs
+  | otherwise = []
 
--- tails
--- init
--- inits
+dropWhile :: (a -> Bool) -> [a] -> [a]
+dropWhile _ [] = []
+dropWhile p (x : xs)
+  | p x = dropWhile p xs
+  | otherwise = x : xs
 
--- subsequences
+tails :: [a] -> [[a]]
+tails [] = [[]]
+tails (x : xs) = (x : xs) : tails xs 
+
+init :: [a] -> [a]
+init [] = error "empty list"
+init [x] = []
+init (x : xs) = x : init xs
+
+addEach :: a -> [[a]] -> [[a]]
+addEach _ [] = []
+addEach x (p : ps) = (x : p) : addEach x ps
+
+inits :: [a] -> [[a]]
+inits [] = [[]]
+inits (x : xs) = 
+  let ps = inits xs in
+    [] : addEach x ps
+
+subsequences :: [a] -> [[a]]
+subsequences [] = [[]]
+subsequences (x : xs) = 
+  let ps = subsequences xs in
+    ps ++ addEach x ps
 
 -- any
 -- all
