@@ -5,6 +5,7 @@
 {-# HLINT ignore "Use elem" #-}
 {-# HLINT ignore "Avoid lambda" #-}
 {-# HLINT ignore "Eta reduce" #-}
+{-# HLINT ignore "Use map" #-}
 
 module FMCList where
 
@@ -220,8 +221,16 @@ elem' x (y : ys)
   | n < 0 = error "index out of bounds"
   | otherwise = xs !! (n - 1)
 
--- filter
--- map
+filter :: (a -> Bool) -> [a] -> [a]
+filter p [] = []
+filter p (x : xs) =
+  if p x then x : filter p xs
+  else filter p xs
+
+
+map :: (a -> b) -> [a] -> [b]
+map f [] = []
+map f (x : xs) = f x : map f xs
 
 -- cycle
 -- repeat
