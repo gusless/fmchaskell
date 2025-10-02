@@ -215,7 +215,7 @@ elem' x (y : ys)
 
 (!!) :: [a] -> Int -> a
 [] !! _ = error "index out of bounds"
-(x : xs) !! 0 = a
+(x : xs) !! 0 = x
 (x : xs) !! n
   | n < 0 = error "index out of bounds"
   | otherwise = xs !! (n - 1)
