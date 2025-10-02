@@ -2,6 +2,9 @@
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 {-# HLINT ignore "Use foldr" #-}
 {-# HLINT ignore "Redundant if" #-}
+{-# HLINT ignore "Use elem" #-}
+{-# HLINT ignore "Avoid lambda" #-}
+{-# HLINT ignore "Eta reduce" #-}
 
 module FMCList where
 
@@ -175,10 +178,8 @@ subsequences (x : xs) =
     ps ++ addEach x ps
 
 any :: (a -> Bool) -> [a] -> Bool
-any p [] = False
-any p (x : xs) =
-  if p x then True
-  else False
+any _ [] = False
+any p (x : xs) = p x || any p xs
 
 all :: (a -> Bool) -> [a] -> Bool
 all p [] = True
@@ -194,14 +195,30 @@ or :: [Bool] -> Bool
 or [] = False
 or (x : xs) = x || or xs
 
--- concat
+concat :: [[a]] -> [a]
+concat [] = []
+concat (lx : lxs) = lx ++ concat lxs   
+
 
 -- elem using the funciton 'any' above
+elem :: Eq a => a -> [a] -> Bool
+elem x xs = any (== x) xs
 
 -- elem': same as elem but elementary definition
 -- (without using other functions except (==))
+elem' :: Eq a => a -> [a] -> Bool
+elem' _ [] = False
+elem' x (y : ys)
+  | x == y = True
+  | otherwise = elem' x ys
 
--- (!!)
+
+(!!) :: [a] -> Int -> a
+[] !! _ = error "index out of bounds"
+(x : xs) !! 0 = a
+(x : xs) !! n
+  | n < 0 = error "index out of bounds"
+  | otherwise = xs !! (n - 1)
 
 -- filter
 -- map
