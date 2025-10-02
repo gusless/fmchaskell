@@ -1,6 +1,7 @@
 {-# LANGUAGE GADTs #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 {-# HLINT ignore "Use foldr" #-}
+{-# HLINT ignore "Redundant if" #-}
 
 module FMCList where
 
@@ -173,11 +174,25 @@ subsequences (x : xs) =
   let ps = subsequences xs in
     ps ++ addEach x ps
 
--- any
--- all
+any :: (a -> Bool) -> [a] -> Bool
+any p [] = False
+any p (x : xs) =
+  if p x then True
+  else False
 
--- and
--- or
+all :: (a -> Bool) -> [a] -> Bool
+all p [] = True
+all p (x : xs) =
+  if p x then all p xs
+  else False
+
+and :: [Bool] -> Bool
+and [] = True
+and (x : xs) = x && and xs
+
+or :: [Bool] -> Bool
+or [] = False
+or (x : xs) = x || or xs
 
 -- concat
 
