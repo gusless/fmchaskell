@@ -6,6 +6,7 @@
 {-# HLINT ignore "Avoid lambda" #-}
 {-# HLINT ignore "Eta reduce" #-}
 {-# HLINT ignore "Use map" #-}
+{-# HLINT ignore "Use infix" #-}
 
 module FMCList where
 
@@ -232,25 +233,73 @@ map :: (a -> b) -> [a] -> [b]
 map f [] = []
 map f (x : xs) = f x : map f xs
 
--- cycle
--- repeat
--- replicate
+cycle :: [a] -> [a]
+cycle [] = error "empty list"
+cycle xs = xs ++ cycle xs 
 
--- isPrefixOf
--- isInfixOf
--- isSuffixOf
+repeat :: a -> [a]
+repeat x = x : repeat x
 
--- zip
--- zipWith
+replicate :: Int -> a -> [a]
+replicate 0 x = []
+replicate n x = x : replicate (n -1) x
 
--- intercalate
--- nub
+isPrefixOf :: Eq a => [a] -> [a] -> Bool
+isPrefixOf [] _ = True
+isPrefixOf _ [] = False
+isPrefixOf (x : xs) (y : ys) = (x == y) && isPrefixOf xs ys 
 
--- splitAt
+isInfixOf :: Eq a => [a] -> [a] -> Bool
+isInfixOf [] _ = True
+isInfixOf _ [] = False
+isInfixOf xs ys
+  | length xs > length ys = False
+  | otherwise = isInfixOf xs ys
+
+
+isSuffixOf :: Eq a => [a] -> [a] -> Bool
+isSuffixOf [] _ = True
+isSuffixOf _ [] = False
+isSuffixOf xs (y : ys)
+  | isSuffixOf xs ys = True
+  | otherwise = drop (length ys - length xs) ys == xs
+
+zip :: [a] -> [b] -> [(a,b)]
+zip _ [] = []
+zip [] _ = []
+zip (x : xs) (y : ys) = (x, y) : zip xs ys
+
+zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]
+zipWith f _ [] = []
+zipWith f [] _ = []
+zipWith f (x : xs) (y : ys) = f x y : zipWith f xs ys
+
+intercalate :: [a] -> [[a]] -> [a] 
+intercalate _ [] = []
+intercalate _ [x] = x 
+intercalate e (x : xs) = x ++ e ++ intercalate e xs 
+
+nub :: Eq a => [a] -> [a]
+nub [] = []
+nub (x : xs) = nub (filter (/= x) xs)
+
+splitAt :: Int -> [a] -> ([a],[a])
+splitAt _ [] = ([], [])
+splitAt 0 xs = ([], xs)
+splitAt n (x : xs) =
+  let (ys, zs) = splitAt (n - 1) xs
+  in (x : ys, zs)
+
 -- what is the problem with the following?:
 -- splitAt n xs  =  (take n xs, drop n xs)
 
--- break
+break :: (a -> Bool) -> [a] -> ([a],[b])
+break f [] = ([], [])
+break f (x : xs)
+  | f x = ([], x : xs)
+  | otherwise =
+    let (ys, zs) = break f xs
+    in (x : ys, zs)
 
 -- lines
 -- words
