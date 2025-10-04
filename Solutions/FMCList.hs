@@ -293,20 +293,44 @@ splitAt n (x : xs) =
 -- what is the problem with the following?:
 -- splitAt n xs  =  (take n xs, drop n xs)
 
-break :: (a -> Bool) -> [a] -> ([a],[b])
+break :: (a -> Bool) -> [a] -> ([a],[a])
 break f [] = ([], [])
 break f (x : xs)
-  | f x = ([], x : xs)
+  | f x  = ([], x : xs)
   | otherwise =
     let (ys, zs) = break f xs
     in (x : ys, zs)
 
--- lines
--- words
--- unlines
--- unwords
+lines :: String -> [String]
+lines "" = []
+lines s =
+  let (l, s') = break (== '\n') s
+  in l : case s' of
+    [] -> []
+    (_ : cs) -> lines cs
 
--- transpose
+words :: String -> [String]
+words "" = []
+words s =
+  let s' = dropWhile (== ' ') s
+  in case s' of
+    "" -> []
+    _ -> let (w, rest) = break (== ' ') s'
+         in w : words rest
+
+unlines :: [String] -> String
+unlines [] = ""
+unlines (x : xs) = x ++ "\n" ++ unlines xs 
+  
+unwords :: [String] -> String
+unwords [] = ""
+unwords (x : xs) = x ++ " " ++ unwords xs
+
+transpose :: [[a]] -> [[a]]
+transpose [] = []
+transpose xs
+  | any null xs = []
+  | otherwise = map head xs : transpose (map tail xs)
 
 -- checks if the letters of a phrase form a palindrome (see below for examples)
 
